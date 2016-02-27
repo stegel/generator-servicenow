@@ -8,13 +8,13 @@ var rest = require('restler');
 
 var PageGenerator = yeoman.generators.NamedBase.extend({
 	initializing : function(){
-		var endpoint = 'https://scdevelopment.service-now.com/api/now/table/sys_ui_page';
+		var endpoint = 'https://' + this.config.get('hostname') + '.service-now.com/api/now/table/sys_ui_page';
 		var query = 'name%3D' + this.name;
 		var yeo = this;
 		var done= this.async();
 		rest.get("https://scdevelopment.service-now.com/api/now/table/sys_ui_page?sysparm_query=" + query, {
-				username : "user",
-				password : "password"
+				username : this.config.get('username');
+				password : this.config.get('password');
 			}).on("complete",function(response){
 			if( response instanceof Error){
 				yeo.log("Error");
