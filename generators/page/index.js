@@ -19,7 +19,7 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		this.username = authHash.substring(0,authHash.indexOf(":"));
 		this.password = authHash.substring(authHash.indexOf(":")+1);
 
-		rest.get("https://scdevelopment.service-now.com/api/now/table/sys_ui_page?sysparm_query=" + query, {
+		rest.get("https://" + this.config.get("hostname") + ".service-now.com/api/now/table/sys_ui_page?sysparm_query=" + query, {
 				username : this.username,
 				password : this.password
 			}).on("complete",function(response){
