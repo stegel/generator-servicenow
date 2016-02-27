@@ -1,2 +1,5 @@
 node_modules
 coverage
+/.yo-rc.json
+/.editorconfig
+/.travis.yml

@@ -21,12 +21,12 @@ module.exports = yeoman.generators.Base.extend({
 			type : 'input',
 			name : "username",
 			message : "What is your username?",
-			default : 'password'
+
 		},{
 			type : 'password',
 			name : 'password',
 			message : 'What is your password?',
-			default : "password"
+
 		},{
 			type : 'input',
 			name : 'appName',
@@ -34,7 +34,11 @@ module.exports = yeoman.generators.Base.extend({
 			default : 'solution'
 		}], function(answers){
 			this.props = answers;
-			
+			this.config.set({
+				"username" : this.props.username,
+				"password" : this.props.password
+			});
+			this.config.save();
 			done();
 		}.bind(this));
 	},
