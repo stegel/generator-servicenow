@@ -36,7 +36,8 @@ module.exports = yeoman.generators.Base.extend({
 			this.props = answers;
 			this.config.set({
 				"username" : this.props.username,
-				"password" : this.props.password
+				"password" : this.props.password,
+				"hostname" : this.props.hostname
 			});
 			this.config.save();
 			done();
