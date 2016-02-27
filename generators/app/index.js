@@ -35,10 +35,15 @@ module.exports = yeoman.generators.Base.extend({
 		}], function(answers){
 			this.props = answers;
 			this.config.set({
-				"username" : this.props.username,
-				"password" : this.props.password,
 				"hostname" : this.props.hostname
 			});
+			
+			// enode username and pass
+			var authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
+			this.config.set({
+				"authHash" : authHash
+			});
+			
 			this.config.save();
 			done();
 		}.bind(this));
