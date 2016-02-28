@@ -1,19 +1,12 @@
 'use strict';
-var path = require('path');
 var assert = require('yeoman-assert');
-var helpers = require('yeoman-generator').test;
 
-describe('generator-snow:app', function () {
-  before(function (done) {
-    helpers.run(path.join(__dirname, '../generators/app'))
-      .withOptions({someOption: true})
-      .withPrompts({someAnswer: true})
-      .on('end', done);
-  });
-
-  it('creates files', function () {
-    assert.file([
-      'dummyfile.txt'
-    ]);
-  });
+describe('SNOW Generator load test', function(){
+	it("can be imported without blowing up", function(){
+		assert(require('../app') !== undefined);	
+		assert(require('../page') !== undefined);	
+		assert(require('../sass') !== undefined);	
+		assert(require('../script') !== undefined);	
+		assert(require('../style') !== undefined);	
+	});
 });

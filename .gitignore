@@ -3,5 +3,6 @@ coverage
 /.yo-rc.json
 /.editorconfig
 /.travis.yml
-*/.DS_Store
+*.DS_Store
 /generators/test
+/test/temp/
