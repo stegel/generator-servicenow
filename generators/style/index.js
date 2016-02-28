@@ -70,7 +70,7 @@ var StyleGenerator = yeoman.generators.NamedBase.extend({
 		var done = this.async();
 
 		if(!this.recordExists && this.props.createNewStyle){
-			this.snClient.postRecord("content_css",{name : yeo.name}).on("complete", function(data, response){
+			this.snClient.postRecord("content_css",{name : this.name}).on("complete", function(data, response){
 				if(response.statusCode == 200 || response.statusCode == 201){
 					yeo.fs.copyTpl(
 						yeo.templatePath('_style.css'),

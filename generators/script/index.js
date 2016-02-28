@@ -29,41 +29,62 @@ var ScriptGenerator = yeoman.generators.NamedBase.extend({
 				yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
 			}
 			else{
-				var results = response.result;
+				yeo.results = response.result;
 
-				if (results.length === 0){
-					yeo.prompt([{
-						type : 'confirm',
-						name : 'createNewScript',
-						message : 'This script does not exist, do you want to create a new script?',	
-						default : false
-					}],function(answers){
-						if(answers.createNewScript){
-							this.snClient.postRecord("sys_ui_script",{name : yeo.name}).on("complete", function(data, response){
-								if(response.statusCode == 200 || response.statusCode == 201){
-									yeo.fs.copyTpl(
-										yeo.templatePath('_script.js'),
-										yeo.destinationPath('app/ui_scripts/' + yeo.name + '.js'),
-										{ content : ""}
-									);	
-									done();
-								}
-								
-							});
-						}
-					}.bind(yeo));
+				if (yeo.results.length === 0){
+					yeo.recordExists = false;
+					done()
 						
 				}
 				else{
-					yeo.fs.copyTpl(
-						yeo.templatePath('_script.js'),
-						yeo.destinationPath('app/ui_scripts/' + results[0].sys_name + '.js'),
-						{ content :results[0].script }
-					);	
+					yeo.recordExists = true;
 					done();
 				}
 			}
 		});
+	},
+	prompting : function (){
+		var done = this.async();
+
+		if(!this.recordExists){
+			this.prompt([{
+				type : 'confirm',
+				name : 'createNewScript',
+				message : 'This script does not exist, do you want to create a new script?',
+				default : false
+			}],function(answers){
+				this.props = answers;
+				done();
+			}.bind(this));
+		}
+		else{
+			done();
+		}
+	},
+	writing : function (){
+		var yeo = this;
+		var done = this.async();
+
+		if(!this.recordExists && this.props.createNewScript){
+			this.snClient.postRecord("sys_ui_script",{name : this.name}).on("complete", function(data, response){
+				if(response.statusCode == 200 || response.statusCode == 201){
+					yeo.fs.copyTpl(
+						yeo.templatePath('_script.js'),
+						yeo.destinationPath('app/ui_scripts/' + yeo.name + '.js'),
+						{ content : ""}
+					);	
+					done();
+				}
+			});
+		}
+		else{
+			this.fs.copyTpl(
+				this.templatePath('_script.js'),
+				this.destinationPath('app/ui_scripts/' + this.results[0].sys_name + '.js'),
+				{ content : this.results[0].script }
+			);
+			done();
+		}
 	}
 });
 
