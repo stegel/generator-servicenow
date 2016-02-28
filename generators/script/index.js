@@ -43,7 +43,7 @@ var ScriptGenerator = yeoman.generators.NamedBase.extend({
 			}
 			else{
 				var results = response.result;
-				yeo.log(response);
+
 				if (results.length === 0){
 					yeo.prompt([{
 						type : 'confirm',
@@ -63,7 +63,6 @@ var ScriptGenerator = yeoman.generators.NamedBase.extend({
 								username : yeo.username,
 								password : yeo.password
 							}).on("complete", function(data, response){
-								yeo.log(response.statusCode);
 								if(response.statusCode == 200 || response.statusCode == 201){
 									yeo.fs.copyTpl(
 										yeo.templatePath('_script.js'),
@@ -79,7 +78,6 @@ var ScriptGenerator = yeoman.generators.NamedBase.extend({
 						
 				}
 				else{
-					yeo.log(results[0].script);
 					yeo.fs.copyTpl(
 						yeo.templatePath('_script.js'),
 						yeo.destinationPath('app/ui_scripts/' + results[0].sys_name + '.js'),
