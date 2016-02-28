@@ -35,44 +35,53 @@ module.exports = yeoman.generators.Base.extend({
 			default : 'solution'
 		}], function(answers){
 			this.props = answers;
-			this.config.set({
-				"hostname" : this.props.hostname,
-				"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now"
-			});
-			
-			// enode username and pass
-			var authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
-			this.config.set({
-				"authHash" : authHash
-			});
-			
-			this.config.save();
+
 			done();
 		}.bind(this));
+	},
+	configuring : function() {
+		var done = this.async();
+
+		this.config.set({
+			"hostname" : this.props.hostname,
+			"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now"
+		});
+
+		// enode username and pass
+		var authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
+		this.config.set({
+			"authHash" : authHash
+		});
+
+		this.config.save();
+
+		// setup snClient
+		var config = {
+			endpoint : this.config.get("endpoint"),
+			username : this.props.username,
+			password : this.props.password
+		};
+
+		this.snClient = new SnClient(config);
+
+		done();
 	},
 
 	writing : function(){
 		var done = this.async();
 		var yeo = this;
-		
-		var endpoint = this.config.get("endpoint");
+
 		var query = 'nameSTARTSWITH' + 	this.props.appName;
-		
-		var getTableContents = function(table,field)
-		{
-			return rest.get(endpoint + "/table/" + table + '?sysparm_query=' + query, {
-				username : yeo.props.username,
-				password : yeo.props.password
-			});
-		}
-		
+
 		mkdirp('app');
 		
 		// get UI Pages
 		mkdirp('app/ui_pages');
-		getTableContents('sys_ui_page','html').on('complete', function(response) {
-			if( response instanceof Error){
-				this.log('Error: ', response.message);
+
+		this.snClient.getRecord('sys_ui_page',query).on('complete', function(response) {
+			if( response.status == "failure"){
+				var mesage =
+				yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
 			}
 			else{
 				
@@ -88,10 +97,11 @@ module.exports = yeoman.generators.Base.extend({
 			}
 			// get UI Scripts
 			mkdirp('app/ui_scripts');
-			getTableContents('sys_ui_script','script').on('complete',function(response) {
-				if( response instanceof Error){
-				this.log('Error: ', response.message);
-			}
+			yeo.snClient.getRecord('sys_ui_script',query).on('complete',function(response) {
+				if( response.status == "failure"){
+					var mesage =
+					yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
+				}
 				else{
 
 					var results = response.result;
@@ -104,9 +114,10 @@ module.exports = yeoman.generators.Base.extend({
 						);
 					}
 					mkdirp('app/css');
-					getTableContents('content_css','style').on('complete',function(response) {
-						if( response instanceof Error){
-							this.log('Error: ', response.message);
+					yeo.snClient.getRecord('content_css',query).on('complete',function(response) {
+						if( response.status == "failure"){
+							var mesage =
+							yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
 						}
 						else{
 
@@ -132,7 +143,7 @@ module.exports = yeoman.generators.Base.extend({
 			
 		})
 	},
-	runNpm : function () {
+	install : function () {
 		this.npmInstall();
 	}
 });
