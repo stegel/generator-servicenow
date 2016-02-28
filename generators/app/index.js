@@ -35,7 +35,8 @@ module.exports = yeoman.generators.Base.extend({
 		}], function(answers){
 			this.props = answers;
 			this.config.set({
-				"hostname" : this.props.hostname
+				"hostname" : this.props.hostname,
+				"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now"
 			});
 			
 			// enode username and pass
@@ -53,12 +54,12 @@ module.exports = yeoman.generators.Base.extend({
 		var done = this.async();
 		var yeo = this;
 		
-		var endpoint = 'https://' + this.props.hostname + '.service-now.com/api/now/table/';
+		var endpoint = this.config.get("endpoint");
 		var query = 'nameSTARTSWITH' + 	this.props.appName;
 		
 		var getTableContents = function(table,field)
 		{
-			return rest.get(endpoint + table + '?sysparm_query=' + query, {
+			return rest.get(endpoint + "/table/" + table + '?sysparm_query=' + query, {
 				username : yeo.props.username,
 				password : yeo.props.password
 			});
