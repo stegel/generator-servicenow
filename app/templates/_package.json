@@ -1,0 +1,10 @@
+{
+    "name": "<%= appName %>",    
+    "version": "0.0.0",
+    "dependencies": {
+        "grunt": "~0.4.2",
+        
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-cssmin": "~0.7.0"
+    }
+}
