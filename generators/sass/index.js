@@ -25,13 +25,11 @@ var SassGenerator = yeoman.generators.NamedBase.extend({
 		}
 		
 		this.snClient = new SnClient(config);
-		
 		this.snClient.getRecord("u_content_scss",this.query).on("complete",function(response){
-			if( response instanceof Error){
-				yeo.log("Error");
+			if( response.status == "failure"){
+				yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
 			}
 			else{
-				yeo.log(response);
 				yeo.results = response.result;
 				
 				if (yeo.results.length === 0){
