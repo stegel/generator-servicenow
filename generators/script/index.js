@@ -81,7 +81,7 @@ var ScriptGenerator = yeoman.generators.NamedBase.extend({
 					yeo.fs.copyTpl(
 						yeo.templatePath('_script.js'),
 						yeo.destinationPath('app/ui_scripts/' + results[0].sys_name + '.js'),
-						{ content : decodeURIComponent('var app = "hey"') }
+						{ content :results[0].script }
 					);	
 					done();
 				}
