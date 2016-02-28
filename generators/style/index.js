@@ -25,8 +25,9 @@ var StyleGenerator = yeoman.generators.NamedBase.extend({
 			username : this.username,
 			password : this.password
 			}).on("complete",function(response){
-			if( response instanceof Error){
-				yeo.log("Error");
+			if( response.status == "failure"){
+				var mesage =
+				yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
 			}
 			else{
 				var results = response.result;
