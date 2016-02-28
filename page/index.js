@@ -13,13 +13,10 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		var yeo = this;
 		var done= this.async();
 
-		// unhash username and pasword
-		var authHash = new Buffer(this.config.get("authHash"), 'base64').toString("ascii");
-
 		var config = {
 			endpoint : this.config.get("endpoint"),
-			username : authHash.substring(0,authHash.indexOf(":")),
-			password : authHash.substring(authHash.indexOf(":")+1)
+			authHash : new Buffer(this.config.get("authHash"), 'base64').toString("ascii"),
+			accessToken : this.config.get("accessToken")
 		};
 
 		this.snClient = new SnClient(config);

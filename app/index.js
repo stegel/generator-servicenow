@@ -12,12 +12,18 @@ var SnClient = require("../snclient.js");
 module.exports = yeoman.generators.Base.extend({
 	prompting : function() {
 		var done = this.async();
-
+		var yeo = this;
+		
 		this.prompt([{
 			type : 'input',
 			name : 'hostname',
 			message : 'What instance are you on? (the part before .service-now.com)',	
 			default : 'scdevelopment'
+		},{
+			type: "list",
+			name : "authType",
+			message : "How would you prefer to authenticate?",
+			choices : ["Basic Authentication","OAuth v2"]
 		},{
 			type : 'input',
 			name : "username",
@@ -35,8 +41,26 @@ module.exports = yeoman.generators.Base.extend({
 			default : 'solution'
 		}], function(answers){
 			this.props = answers;
-
-			done();
+			
+			if(this.props.authType !== "Basic Authentication"){
+				this.prompt([{
+					type : "input",
+					name : "client_id",
+					message : "Client ID (for OAuth):"
+				},{
+					type : "input",
+					name : "client_secret",
+					message : "Client Secret"
+				}], function(answers){
+					yeo.props.client_id = answers.client_id;
+					yeo.props.client_secret = answers.client_secret;
+					done();
+				});
+			}
+			else{
+				done();
+			}
+			
 		}.bind(this));
 	},
 	configuring : function() {
@@ -58,8 +82,10 @@ module.exports = yeoman.generators.Base.extend({
 		// setup snClient
 		var config = {
 			endpoint : this.config.get("endpoint"),
-			username : this.props.username,
-			password : this.props.password
+			authHash : new Buffer(authHash,"base64").toString("ascii"),
+			authType : this.props.authType,
+			client_id : this.props.client_id,
+			client_secret : this.props.client_secret
 		};
 
 		this.snClient = new SnClient(config);

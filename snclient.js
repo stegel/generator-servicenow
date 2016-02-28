@@ -2,8 +2,23 @@
 var restler = require('restler');
 var snClient = restler.service(
 	function(config){
-		this.defaults.username = config.username
-		this.defaults.password = config.password;
+		
+		if(config.authType === "OAuth v2")
+		{
+			if(!config.accessToken){
+				
+			}
+			else{
+				this.defaults.accessToken = config.accessToken;
+			}
+		}
+		else{
+		
+			this.defaults.username = config.authHash.substring(0,config.authHash.indexOf(":"))
+			this.defaults.password = config.authHash.substring(config.authHash.indexOf(":")+1);
+		
+		}
+		
 		this.defaults.headers = {
 			'Content-Type': 'application/json',
 			'Accepts': 'application/json'
