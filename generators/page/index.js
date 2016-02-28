@@ -64,7 +64,7 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 				}
 				else{
 					yeo.fs.copyTpl(
-						yeo.templatePath('_page.html'),
+						yeo.templatePath('_existing-page.html'),
 						yeo.destinationPath('app/ui_pages/' + results[0].sys_name + '.html'),
 						{ content : results[0].html }
 					);	
