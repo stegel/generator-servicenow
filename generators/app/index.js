@@ -7,6 +7,7 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var rest = require('restler');
 var mkdirp = require('mkdirp');
+var SnClient = require("../../snclient.js");
 
 module.exports = yeoman.generators.Base.extend({
 	prompting : function() {

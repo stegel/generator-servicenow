@@ -3,11 +3,13 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var rest = require('restler');
+var SnClient = require("../../snclient.js");
 
 var SassGenerator = yeoman.generators.NamedBase.extend({
 	initializing : function(){
-		this.endpoint = this.config.get("endpoint");
+		
 		this.query = 'u_name%3D' + this.name;
+		
 		var yeo = this;
 		var done= this.async();
 		
@@ -16,23 +18,22 @@ var SassGenerator = yeoman.generators.NamedBase.extend({
 		
 		var authHash = new Buffer(this.config.get("authHash"), 'base64').toString("ascii");
 
-		this.username = authHash.substring(0,authHash.indexOf(":"));
-		this.password = authHash.substring(authHash.indexOf(":")+1);
-	
-		rest.get(this.endpoint + "/table/u_content_scss?sysparm_query=" + this.query, {
-			headers : {
-				'Content-Type': 'application/json',
-				'Accepts': 'application/json'
-			},
-			username : this.username,
-			password : this.password
-			}).on("complete",function(response){
+		var config = {
+			endpoint : this.config.get("endpoint"),
+			username : authHash.substring(0,authHash.indexOf(":")),
+			password : authHash.substring(authHash.indexOf(":")+1)
+		}
+		
+		this.snClient = new SnClient(config);
+		
+		this.snClient.getRecord("u_content_scss",this.query).on("complete",function(response){
 			if( response instanceof Error){
 				yeo.log("Error");
 			}
 			else{
+				yeo.log(response);
 				yeo.results = response.result;
-
+				
 				if (yeo.results.length === 0){
 					yeo.recordExists = false;
 					done();
@@ -69,17 +70,7 @@ var SassGenerator = yeoman.generators.NamedBase.extend({
 		var done = this.async();
 		if(!this.recordExists && this.props.createNewSCSS){
 			
-			
-			var jsonData = JSON.stringify({u_name : this.name});
-			rest.post(this.endpoint + "/table/u_content_scss",{
-				headers : {
-					"Accept" : "application/json",
-					"Content-Type" : "application/json"
-				},
-				data : jsonData,
-				username : this.username,
-				password : this.password
-			}).on("complete", function(data, response){
+			this.snClient.postRecord("u_content_scss",{u_name : this.name}).on("complete", function(data, response){
 				if(response.statusCode == 200 || response.statusCode == 201){
 					yeo.fs.copyTpl(
 						yeo.templatePath('_style.scss'),

@@ -4,3 +4,4 @@ coverage
 /.editorconfig
 /.travis.yml
 */.DS_Store
+/generators/test
