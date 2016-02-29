@@ -8,7 +8,7 @@ var yosay = require('yosay');
 var rest = require('restler');
 var mkdirp = require('mkdirp');
 var SnClient = require("../snclient.js");
-var fs = require('fs');
+var jsonfile = require('jsonfile');
 
 var _getToken = function(config){
 	return rest.post("https://scdevelopment.service-now.com/oauth_token.do",{
@@ -126,12 +126,10 @@ module.exports = yeoman.generators.Base.extend({
 				};
 
 				//write out oauth settings to file
-				fs.writeFile('.oauth',JSON.stringify(oCon),function(err){
+				jsonfile.writeFile('.oauth',oCon, {spaces : 4},function(err){
 					if(err){
 						return console.log(err);
 					}
-
-					console.log("The file was saved");
 				});
 
 				//setup rest client

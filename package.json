@@ -30,6 +30,7 @@
     "gulp-mocha": "^2.0.0",
     "gulp-nsp": "^2.1.0",
     "gulp-plumber": "^1.0.0",
+    "jsonfile": "^2.2.3",
     "lodash": "^4.5.1",
     "mkdirp": "^0.5.1",
     "restler": "^3.4.0",
