@@ -16,6 +16,7 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		var config = {
 			endpoint : this.config.get("endpoint"),
 			authHash : new Buffer(this.config.get("authHash"), 'base64').toString("ascii"),
+			authType : this.config.get("authType"),
 			accessToken : this.config.get("accessToken")
 		};
 

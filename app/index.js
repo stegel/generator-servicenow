@@ -9,6 +9,20 @@ var rest = require('restler');
 var mkdirp = require('mkdirp');
 var SnClient = require("../snclient.js");
 
+var _getToken = function(config){
+	return rest.post("https://scdevelopment.service-now.com/oauth_token.do",{
+		headers : {
+			"Accept" : "application/json"
+		},
+		data : {
+			grant_type : "password",
+			client_id : config.client_id,
+			client_secret : config.client_secret,
+			username : config.authHash.substring(0,config.authHash.indexOf(":")),
+		password : config.authHash.substring(config.authHash.indexOf(":")+1)
+		}
+	});
+};
 module.exports = yeoman.generators.Base.extend({
 	prompting : function() {
 		var done = this.async();
@@ -65,10 +79,12 @@ module.exports = yeoman.generators.Base.extend({
 	},
 	configuring : function() {
 		var done = this.async();
+		var yeo = this;
 
 		this.config.set({
 			"hostname" : this.props.hostname,
-			"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now"
+			"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now",
+			"authType" : this.props.authType
 		});
 
 		// enode username and pass
@@ -88,9 +104,25 @@ module.exports = yeoman.generators.Base.extend({
 			client_secret : this.props.client_secret
 		};
 
-		this.snClient = new SnClient(config);
+		if(this.props.authType === "OAuth v2"){
+			_getToken(config).on("complete",function(data,response){
+				config.accessToken = data.access_token;
+				yeo.config.set("accessToken",data.access_token);
+				yeo.config.set("refreshToken",data.refresh_token);
 
-		done();
+				yeo.config.save();
+
+				yeo.snClient = new SnClient(config);
+
+				done();
+			});
+		}
+		else{
+			this.snClient = new SnClient(config);
+			done();
+		}
+
+
 	},
 
 	writing : function(){
