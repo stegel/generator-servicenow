@@ -4,17 +4,21 @@ var snClient = restler.service(
 	function(config){
 		this.config = config;
 		
-		if(config.authType === "OAuth v2")
-		{
-			this.defaults.accessToken = config.accessToken;
-
-		}
-		else{
+		// TODO implement OAuth v2
+//		if(config.authType === "OAuth v2")
+//		{
+//			this.defaults.accessToken = config.accessToken;
+//
+//		}
+//		else{
+//
+//			this.defaults.username = config.authHash.substring(0,config.authHash.indexOf(":"));
+//			this.defaults.password = config.authHash.substring(config.authHash.indexOf(":")+1);
+//
+//		}
 		
-			this.defaults.username = config.authHash.substring(0,config.authHash.indexOf(":"));
-			this.defaults.password = config.authHash.substring(config.authHash.indexOf(":")+1);
-		
-		}
+		this.defaults.username = config.authHash.substring(0,config.authHash.indexOf(":"));
+		this.defaults.password = config.authHash.substring(config.authHash.indexOf(":")+1);
 		
 		this.defaults.headers = {
 			'Content-Type': 'application/json',
@@ -38,4 +42,5 @@ var snClient = restler.service(
 		},
 
 	});
+
 module.exports = snClient;

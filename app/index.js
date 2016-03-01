@@ -8,22 +8,10 @@ var yosay = require('yosay');
 var rest = require('restler');
 var mkdirp = require('mkdirp');
 var SnClient = require("../snclient.js");
-var jsonfile = require('jsonfile');
+//var jsonfile = require('jsonfile');
+//var tokens = require('../tokens.js');
 
-var _getToken = function(config){
-	return rest.post("https://scdevelopment.service-now.com/oauth_token.do",{
-		headers : {
-			"Accept" : "application/json"
-		},
-		data : {
-			grant_type : "password",
-			client_id : config.client_id,
-			client_secret : config.client_secret,
-			username : config.authHash.substring(0,config.authHash.indexOf(":")),
-		password : config.authHash.substring(config.authHash.indexOf(":")+1)
-		}
-	});
-};
+
 module.exports = yeoman.generators.Base.extend({
 	prompting : function() {
 		var done = this.async();
@@ -34,11 +22,13 @@ module.exports = yeoman.generators.Base.extend({
 			name : 'hostname',
 			message : 'What instance are you on? (the part before .service-now.com)',	
 			default : 'scdevelopment'
-		},{
-			type: "list",
-			name : "authType",
-			message : "How would you prefer to authenticate?",
-			choices : ["Basic Authentication","OAuth v2"]
+// TODO: implement OAuth2 better
+//		},{
+//			type: "list",
+//			name : "authType",
+//			message : "How would you prefer to authenticate?",
+//			choices : ["Basic Authentication","OAuth v2"]
+//		},{
 		},{
 			type : 'input',
 			name : "username",
@@ -56,25 +46,26 @@ module.exports = yeoman.generators.Base.extend({
 			default : 'solution'
 		}], function(answers){
 			this.props = answers;
-			
-			if(this.props.authType !== "Basic Authentication"){
-				this.prompt([{
-					type : "input",
-					name : "client_id",
-					message : "Client ID (for OAuth):"
-				},{
-					type : "input",
-					name : "client_secret",
-					message : "Client Secret"
-				}], function(answers){
-					yeo.props.client_id = answers.client_id;
-					yeo.props.client_secret = answers.client_secret;
-					done();
-				});
-			}
-			else{
-				done();
-			}
+			// TODO: implement OAuth2 better
+//			if(this.props.authType !== "Basic Authentication"){
+//				this.prompt([{
+//					type : "input",
+//					name : "client_id",
+//					message : "Client ID (for OAuth):"
+//				},{
+//					type : "input",
+//					name : "client_secret",
+//					message : "Client Secret"
+//				}], function(answers){
+//					yeo.props.client_id = answers.client_id;
+//					yeo.props.client_secret = answers.client_secret;
+//					done();
+//				});
+//			}
+//			else{
+//				done();
+//			}
+			done();
 			
 		}.bind(this));
 	},
@@ -82,17 +73,20 @@ module.exports = yeoman.generators.Base.extend({
 		var done = this.async();
 		var yeo = this;
 
+		// encode username and pass
+		var authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
+		this.config.set({
+
+		});
+
 		this.config.set({
 			"hostname" : this.props.hostname,
 			"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now",
-			"authType" : this.props.authType
-		});
-
-		// enode username and pass
-		var authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
-		this.config.set({
+//			"authType" : this.props.authType TODO implement OAuth v2
 			"authHash" : authHash
 		});
+
+
 
 		this.config.save();
 
@@ -100,48 +94,34 @@ module.exports = yeoman.generators.Base.extend({
 		var config = {
 			endpoint : this.config.get("endpoint"),
 			authHash : new Buffer(authHash,"base64").toString("ascii"),
-			authType : this.props.authType,
+//			authType : this.props.authType, TODO implement OAuth v2
 			client_id : this.props.client_id,
 			client_secret : this.props.client_secret
 		};
 
+		this.snClient = new SnClient(config);
+		done();
 
 
-		if(this.props.authType === "OAuth v2"){
-			_getToken(config).on("complete",function(data,response){
-				config.accessToken = data.access_token;
-				yeo.config.set({
-					"accessToken" : data.access_token,
-					"refreshToken" : data.refresh_token,
-					"client_id" : config.client_id,
-					"client_secret" : config.client_secret
-				});
-				yeo.config.save();
-
-				var oCon = {
-					client_id : yeo.props.client_id,
-					client_secret : yeo.props.client_secret,
-					access_token : data.access_token,
-					refresh_token : data.refresh_token
-				};
-
-				//write out oauth settings to file
-				jsonfile.writeFile('.oauth',oCon, {spaces : 4},function(err){
-					if(err){
-						return console.log(err);
-					}
-				});
-
-				//setup rest client
-				yeo.snClient = new SnClient(config);
-
-				done();
-			});
-		}
-		else{
-			this.snClient = new SnClient(config);
-			done();
-		}
+//	TODO implement OAuth v2
+//		if(this.props.authType === "OAuth v2"){
+//			if(tokens.getNewToken(config)){
+//				//setup rest client
+//				this.snClient = new SnClient(config);
+//
+//				done();
+//			}
+//			else{
+//				this.log.error("fail");
+//			}
+//			this.snClient = new SnClient(config);
+//				this.log("testing");
+//				done();
+//
+//		}
+//		else{
+//
+//		}
 
 
 	},

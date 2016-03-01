@@ -4,7 +4,8 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var rest = require('restler');
 var SnClient = require("../snclient.js");
-var fs = require('fs');
+var jsonfile = require('jsonfile');
+var tokens = require("../tokens.js");
 
 var PageGenerator = yeoman.generators.NamedBase.extend({
 	initializing : function(){
@@ -14,14 +15,14 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		var yeo = this;
 		var done= this.async();
 
-		var oauthFile = fs.readFileSync('.oauth');
-		var oauthJSON = JSON.parse(oauthFile);
+		this.oauthJSON = jsonfile.readFileSync('.oauth');
+
 
 		var config = {
 			endpoint : this.config.get("endpoint"),
 			authHash : new Buffer(this.config.get("authHash"), 'base64').toString("ascii"),
 			authType : this.config.get("authType"),
-			accessToken : oauthJSON.access_token
+			accessToken : this.oauthJSON.access_token
 		};
 
 		this.snClient = new SnClient(config);
@@ -32,38 +33,9 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 				
 				// try and get new auth key
 				// get refresh token from file
-
-				var data = {
-						grant_type : "refresh_token",
-						client_id : yeo.config.get("client_id"),
-						client_secret : yeo.config.get("client_secret"),
-						refresh_token : oauthJSON.refresh_token
-
-					};
-				rest.post("https://scdevelopment.service-now.com/oauth_token.do",{
-					headers : {
-						"Accept" : "application/json"
-					},
-					data : data
-				}).on("complete",function(data,response){
-					if( data.error){
-						var mesage =
-						yeo.log(yosay("Error\nMessage: "+ data.error + "\nDetail: " + data.error_description));
-						done();
-					}
-					else{
-						oauthJSON.access_token = data.access_token;
-						fs.writeFile('.oauth',JSON.stringify(oauthJSON),function(err){
-							if(err){
-								return console.log(err);
-							}
-							yeo.env.error("We had to fetch a new oauth key, please run again.");
-						});
-
-					}
-
-				});
-
+				if(tokens.getNewTokenFromRefresh()){
+					yeo.env.error("We had to fetch a new oauth key, please run again.");
+				}
 			}
 			else{
 				yeo.results = response.result;
@@ -125,6 +97,7 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		}
 
 	}
+
 });
 
 module.exports = PageGenerator;
