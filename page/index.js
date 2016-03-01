@@ -15,14 +15,14 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		var yeo = this;
 		var done= this.async();
 
-		this.oauthJSON = jsonfile.readFileSync('.oauth');
+//		this.oauthJSON = jsonfile.readFileSync('.oauth');
 
 
 		var config = {
 			endpoint : this.config.get("endpoint"),
 			authHash : new Buffer(this.config.get("authHash"), 'base64').toString("ascii"),
-			authType : this.config.get("authType"),
-			accessToken : this.oauthJSON.access_token
+	//		authType : this.config.get("authType"),
+//			accessToken : this.oauthJSON.access_token
 		};
 
 		this.snClient = new SnClient(config);
@@ -30,12 +30,13 @@ var PageGenerator = yeoman.generators.NamedBase.extend({
 		this.snClient.getRecord("sys_ui_page", this.query).on("complete",function(response){
 
 			if( response.status == "failure"){
-				
+				yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
 				// try and get new auth key
 				// get refresh token from file
-				if(tokens.getNewTokenFromRefresh()){
-					yeo.env.error("We had to fetch a new oauth key, please run again.");
-				}
+				//if(tokens.getNewTokenFromRefresh()){
+				//	yeo.env.error("We had to fetch a new oauth key, please run again.");
+				//}
+
 			}
 			else{
 				yeo.results = response.result;
