@@ -6,3 +6,4 @@ coverage
 *.DS_Store
 /generators/test
 /test/temp/
+/npm-debug.log

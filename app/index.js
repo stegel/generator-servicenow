@@ -1,6 +1,4 @@
 'use strict';
-// client id: 8574519ac7f112005ee265152c66d1db
-// secret : mB,.#?:-7v
 
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
