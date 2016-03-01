@@ -1,6 +1,6 @@
 {
   "name": "generator-sn-localdev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Yeoman scaffold for building AngularJS apps on the ServiceNow platform",
   "homepage": "http://stegel.github.io/generator-snow",
   "author": {
