@@ -20,13 +20,6 @@ module.exports = yeoman.generators.Base.extend({
 			name : 'hostname',
 			message : 'What instance are you on? (the part before .service-now.com)',	
 			default : 'scdevelopment'
-// TODO: implement OAuth2 better
-//		},{
-//			type: "list",
-//			name : "authType",
-//			message : "How would you prefer to authenticate?",
-//			choices : ["Basic Authentication","OAuth v2"]
-//		},{
 		},{
 			type : 'input',
 			name : "username",
@@ -50,25 +43,6 @@ module.exports = yeoman.generators.Base.extend({
 		}], function(answers){
 			this.props = answers;
 			this.props.authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
-			// TODO: implement OAuth2 better
-//			if(this.props.authType !== "Basic Authentication"){
-//				this.prompt([{
-//					type : "input",
-//					name : "client_id",
-//					message : "Client ID (for OAuth):"
-//				},{
-//					type : "input",
-//					name : "client_secret",
-//					message : "Client Secret"
-//				}], function(answers){
-//					yeo.props.client_id = answers.client_id;
-//					yeo.props.client_secret = answers.client_secret;
-//					done();
-//				});
-//			}
-//			else{
-//				done();
-//			}
 			done();
 			
 		}.bind(this));
@@ -80,7 +54,6 @@ module.exports = yeoman.generators.Base.extend({
 		this.config.set({
 			"hostname" : this.props.hostname,
 			"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now",
-//			"authType" : this.props.authType TODO implement OAuth v2
 			"authHash" : this.props.authHash
 		});
 
@@ -92,36 +65,12 @@ module.exports = yeoman.generators.Base.extend({
 		var config = {
 			endpoint : this.config.get("endpoint"),
 			authHash : new Buffer(this.props.authHash,"base64").toString("ascii"),
-//			authType : this.props.authType, TODO implement OAuth v2
 			client_id : this.props.client_id,
 			client_secret : this.props.client_secret
 		};
 
 		this.snClient = new SnClient(config);
 		done();
-
-
-//	TODO implement OAuth v2
-//		if(this.props.authType === "OAuth v2"){
-//			if(tokens.getNewToken(config)){
-//				//setup rest client
-//				this.snClient = new SnClient(config);
-//
-//				done();
-//			}
-//			else{
-//				this.log.error("fail");
-//			}
-//			this.snClient = new SnClient(config);
-//				this.log("testing");
-//				done();
-//
-//		}
-//		else{
-//
-//		}
-
-
 	},
 
 	writing : function(){
@@ -215,21 +164,8 @@ module.exports = yeoman.generators.Base.extend({
 		var done = this.async();
 		this.npmInstall();
 		done();
-	},
-	_getToken : function(config){
-		return rest.post("https://scdevelopment.service-now.com/oauth_token.do",{
-			headers : {
-				"Accept" : "application/json"
-			},
-			data : {
-				grant_type : "password",
-				client_id : config.client_id,
-				client_secret : config.client_secret,
-				username : config.authHash.substring(0,config.authHash.indexOf(":")),
-			password : config.authHash.substring(config.authHash.indexOf(":")+1)
-			}
-		});
 	}
+
 
 	
 });
