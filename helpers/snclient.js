@@ -3,7 +3,7 @@ var restler = require('restler');
 var snClient = restler.service(
 	function(config){
 		this.config = config;
-		
+
 		// TODO implement OAuth v2
 //		if(config.authType === "OAuth v2")
 //		{
@@ -16,20 +16,20 @@ var snClient = restler.service(
 //			this.defaults.password = config.authHash.substring(config.authHash.indexOf(":")+1);
 //
 //		}
-		
+
 		this.defaults.username = config.authHash.substring(0,config.authHash.indexOf(":"));
 		this.defaults.password = config.authHash.substring(config.authHash.indexOf(":")+1);
-		
+
 		this.defaults.headers = {
 			'Content-Type': 'application/json',
 			'Accepts': 'application/json'
 		};
 		this.baseURL = config.endpoint;
 
-		
+
 	},
 	{
-		
+
 	},
 	{
 		getRecord : function(table,query){
