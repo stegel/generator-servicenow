@@ -162,9 +162,15 @@ module.exports = yeoman.generators.Base.extend({
 	},
 	install : function(){
 		var done = this.async();
-		this.npmInstall();
+		var yeo = this;
+		this.npmInstall("","",function(){
+				yeo.spawnCommand('npm', ['link grunt-servicenow']);
+				yeo.spawnCommand('grunt',['pull'])
+			});
+
 		done();
 	}
+
 
 
 	
