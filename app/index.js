@@ -1,177 +1,131 @@
 'use strict';
 
-var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
-var yosay = require('yosay');
-var rest = require('restler');
-var mkdirp = require('mkdirp');
-var SnClient = require("../helpers/snclient.js");
-//var jsonfile = require('jsonfile');
-//var tokens = require('../tokens.js');
+var yeoman = require('yeoman-generator'),
+	yosay = require('yosay'),
+	rest = require('restler'),
+	mkdirp = require('mkdirp'),
+	util = require('util'),
+	path = require('path'),
+	jsonfile = require('jsonfile'),
+	_ = require('underscore.string'),
+	SnClient = require("../helpers/snclient.js");
 
+var Generator = module.exports = function Generator(args, options){
+	yeoman.generators.Base.apply(this, arguments);
 
-module.exports = yeoman.generators.Base.extend({
-	prompting : function() {
-		var done = this.async();
-		var yeo = this;
+	this.argument('appname', {type: String, required :false});
 
-		this.prompt([{
-			type : 'input',
-			name : 'hostname',
-			message : 'What instance are you on? (the part before .service-now.com)',	
-			default : 'scdevelopment'
-		},{
-			type : 'input',
-			name : "username",
-			message : "What is your username?",
+	this.appname = this.appname || path.basename(process.cwd());
 
-		},{
-			type : 'password',
-			name : 'password',
-			message : 'What is your password?',
+	this.appname = _.camelize(_.slugify(_.humanize(this.appname)));
 
-		},{
-			type : 'input',
-			name : 'appName',
-			message : 'What is your app prefix?',
-			default : 'solution'
-		},{
-			type : 'input',
-			name : 'dest',
-			message : 'Where do you want to store your app files',
-			default : 'dist'
-		}], function(answers){
-			this.props = answers;
-			this.props.authHash = new Buffer(this.props.username + ":" + this.props.password).toString("base64");
-			done();
-			
-		}.bind(this));
-	},
-	configuring : function() {
-		var done = this.async();
-		var yeo = this;
+	this.on('end', function () {
+		console.log("hey");
+		this.npmInstall();
+	}.bind(this));
 
-		this.config.set({
-			"hostname" : this.props.hostname,
-			"endpoint" : "https://" + this.props.hostname + ".service-now.com/api/now",
-			"authHash" : this.props.authHash
-		});
+	this.pkg = require("../package.json");
+//	this.sourceRoot(path.join(__dirname, '../templates/common'));
+};
 
+util.inherits(Generator, yeoman.generators.Base);
 
-
-		this.config.save();
-
-		// setup snClient
-		var config = {
-			endpoint : this.config.get("endpoint"),
-			authHash : new Buffer(this.props.authHash,"base64").toString("ascii"),
-			client_id : this.props.client_id,
-			client_secret : this.props.client_secret
-		};
-
-		this.snClient = new SnClient(config);
-		done();
-	},
-
-	writing : function(){
-		var done = this.async(),
-			yeo = this,
-			dest = this.props.dest,
-			query = 'nameSTARTSWITH' + 	this.props.appName;
-
-		mkdirp(dest);
-		
-		// get UI Pages
-		mkdirp(dest +'/ui_pages');
-		mkdirp(dest +'/ui_scripts');
-		mkdirp(dest +'/stylesheets');
-		
-		this.template('_package.json', 'package.json',{appName : this.props.appName})
-
-		this.template("_gruntfile.js", "Gruntfile.js",{
-			dest : dest
-		});
-
-		this.template("_sn-config.json",".sn-config.json",{
-			host : this.props.hostname,
-			auth : this.props.authHash,
-			prefix : this.props.appName
-		});
-		this.snClient.getRecord('sys_ui_page',query).on('complete', function(response) {
-			if( response.status == "failure"){
-				var mesage =
-				yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
-				done();
-			}
-			else{
-				
-				var results = response.result;
-				
-				for(var i = 0; i < results.length; i++){
-					yeo.fs.copyTpl(
-						yeo.templatePath('_test.html'),
-						yeo.destinationPath(dest + '/ui_pages/' + results[i].sys_name + '.html'),
-						{ content : results[i].html}
-					);
-				}
-			}
-			// get UI Scripts
-			yeo.snClient.getRecord('sys_ui_script',query).on('complete',function(response) {
-				if( response.status == "failure"){
-					var mesage =
-					yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
-					
-					done();
-				}
-				else{
-
-					var results = response.result;
-
-					for(var i = 0; i < results.length; i++){
-						yeo.fs.copyTpl(
-							yeo.templatePath('_test.js'),
-							yeo.destinationPath(dest + '/ui_scripts/' + results[i].sys_name + '.js'),
-							{ content : results[i].script}
-						);
-					}
-					yeo.snClient.getRecord('content_css',query).on('complete',function(response) {
-						if( response.status == "failure"){
-							var mesage =
-							yeo.log(yosay("Error\nMessage: "+ response.error.message + "\nDetail: " + response.error.detail));
-							done();
-						}
-						else{
-
-							var results = response.result;
-
-							for(var i = 0; i < results.length; i++){
-								yeo.fs.copyTpl(
-									yeo.templatePath('_main.css'),
-									yeo.destinationPath(dest + '/css/' + results[i].sys_name + '.css'),
-									{ content : results[i].style}
-								);
-							}
-
-							done();
-						}
-					});
-				}
-			});
-			
-		})
-	},
-	install : function(){
-		var done = this.async();
-		var yeo = this;
-		this.npmInstall("","",function(){
-				yeo.spawnCommand('grunt',['pull']);
-				done();
-			});
-
-
+Generator.prototype.welcome = function welcome(){
+	if(!this.options['skip-welcome-message']){
+		this.log(yosay());
 	}
+};
 
+Generator.prototype.askForHostname = function askForHostname(){
+	var done = this.async();
 
+	this.prompt([{
+		type : 'input',
+		name : 'hostname',
+		message : 'What instance are you on? (the part before .service-now.com)',
+		default : 'scdevelopment'
+	}], function(props){
+		this.hostname = props.hostname;
+		done();
+	}.bind(this));
+};
 
+Generator.prototype.askForUsername = function askForUsername(){
+	var done = this.async();
+
+	this.prompt([{
+		type : 'input',
+		name : "username",
+		message : "What is your username?",
+	}], function(props){
+		this.username = props.username;
+		done();
+	}.bind(this));
+};
+
+Generator.prototype.askForPassword = function askForPassword(){
+	var done = this.async();
+
+	this.prompt([{
+		type : 'password',
+		name : "password",
+		message : "What is your password?",
+	}], function(props){
+		this.password = props;
+		this.authHash = new Buffer(this.username + ":" + this.password).toString("base64");
+		done();
+	}.bind(this));
+};
+
+Generator.prototype.askForPrefix = function askForPrefix(){
+	var done = this.async();
+
+	this.prompt([{
+		type : 'input',
+		name : 'appPrefix',
+		message : 'What is your app prefix?',
+		default : 'solution'
+	}], function(props){
+		this.appPrefix = props.appPrefix;
+		
+		done();
+	}.bind(this));
+
+};
+
+Generator.prototype.askForDest = function askForDest(){
+	var done = this.async();
+
+	this.prompt([{
+		type : 'input',
+		name : 'appDest',
+		message : 'Where do you want to store your app files?',
+		default : 'dist'
+	}], function(props){
+		this.appDest = props.appDest;
+
+		done();
+	}.bind(this));
 	
-});
+};
+
+Generator.prototype.saveConfig = function saveConfig(){
+	this.template("_sn-config.json",".sn-config.json",{
+		host : this.hostname,
+		auth : this.authHash,
+		prefix : this.appPrefix,
+		dest : this.appDest
+	});
+};
+
+Generator.prototype.setupPackage = function setupPackage(){
+	this.template("_package.json", "package.json",{
+		appName : this.appname
+	});
+};
+
+Generator.prototype.setupGrunt = function setupGrunt(){
+	this.template("_gruntfile.js", "Gruntfile.js",{
+		dest : this.appDest
+	});
+};
