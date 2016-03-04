@@ -17,9 +17,14 @@
     "servicenow"
   ],
   "dependencies": {
-    "yeoman-generator": "^0.21.1",
-    "chalk": "^1.0.0",
-    "yosay": "^1.0.2"
+	"yeoman-generator": "^0.21.1",
+	"chalk": "^1.0.0",
+	"yosay": "^1.0.2",
+	"jsonfile": "^2.2.3",
+	"lodash": "^4.5.1",
+	"mkdirp": "^0.5.1",
+	"restler": "^3.4.0",
+	"underscore.string": "^3.3.4"
   },
   "devDependencies": {
     "eslint-config-xo-space": "^0.7.0",
@@ -45,7 +50,7 @@
       "mocha": true
     }
   },
-  "repository": "stegel/generator-snow",
+  "repository": "stegel/generator-servicenow",
   "scripts": {
     "prepublish": "gulp prepublish",
     "test": "gulp"
