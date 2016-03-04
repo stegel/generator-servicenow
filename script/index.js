@@ -3,7 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var rest = require('restler');
-var SnClient = require("../snclient.js");
+var SnClient = require("../helpers/snclient.js");
 
 var ScriptGenerator = yeoman.generators.NamedBase.extend({
 	initializing : function(){
