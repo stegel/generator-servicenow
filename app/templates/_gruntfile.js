@@ -3,7 +3,8 @@ module.exports = function(grunt){
 
 	grunt.initConfig({
 		pull : snConfig.folders,
-		destination : "<%= dest %>"
+		destination : "<%= dest %>",
+		appPrefix : "<%= appPrefix %>"
 	});
 
 	grunt.loadNpmTasks("grunt-servicenow");

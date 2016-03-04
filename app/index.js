@@ -126,6 +126,7 @@ Generator.prototype.setupPackage = function setupPackage(){
 
 Generator.prototype.setupGrunt = function setupGrunt(){
 	this.template("_gruntfile.js", "Gruntfile.js",{
-		dest : this.appDest
+		dest : this.appDest,
+		appPrefix : this.appPrefix
 	});
 };
