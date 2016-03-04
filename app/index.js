@@ -20,7 +20,6 @@ var Generator = module.exports = function Generator(args, options){
 	this.appname = _.camelize(_.slugify(_.humanize(this.appname)));
 
 	this.on('end', function () {
-		console.log("hey");
 		this.npmInstall();
 	}.bind(this));
 
@@ -129,4 +128,8 @@ Generator.prototype.setupGrunt = function setupGrunt(){
 		dest : this.appDest,
 		appPrefix : this.appPrefix
 	});
+};
+
+Generator.prototype.setupGitIgnore = function setupGitIgnore(){
+	this.copy("_gitignore", ".gitignore");
 };
