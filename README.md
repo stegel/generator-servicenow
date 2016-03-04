@@ -1,4 +1,4 @@
-# generator-servicenow [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+# generator-servicenow [![NPM version][npm-image]][npm-url]
 > Yeoman scaffold for building AngularJS apps on the ServiceNow platform
 
 ## Installation
