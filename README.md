@@ -93,10 +93,5 @@ yo snow:sass *sassName*
 
 MIT © [AJ Siegel]()
 
-
-[npm-image]: https://badge.fury.io/js/generator-snow.svg
-[npm-url]: https://npmjs.org/package/generator-snow
-[daviddm-image]: https://david-dm.org/stegel/generator-snow.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/stegel/generator-snow
-[coveralls-image]: https://coveralls.io/repos/stegel/generator-snow/badge.svg
-[coveralls-url]: https://coveralls.io/r/stegel/generator-snow
+[npm-image]: https://badge.fury.io/js/generator-servicenow.svg
+[npm-url]: https://npmjs.org/package/generator-servicenow
