@@ -71,7 +71,7 @@ Generator.prototype.askForPassword = function askForPassword(){
 		name : "password",
 		message : "What is your password?",
 	}], function(props){
-		this.password = props;
+		this.password = props.password;
 		this.authHash = new Buffer(this.username + ":" + this.password).toString("base64");
 		done();
 	}.bind(this));
