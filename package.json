@@ -9,7 +9,7 @@
     "url": ""
   },
   "files": [
-    "generators"
+    "app"
   ],
   "main": "app/index.js",
   "keywords": [
@@ -50,9 +50,5 @@
     }
   },
   "repository": "stegel/generator-servicenow",
-  "scripts": {
-    "prepublish": "gulp prepublish",
-    "test": "gulp"
-  },
   "license": "MIT"
 }
