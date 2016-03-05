@@ -2,13 +2,10 @@
 
 var yeoman = require('yeoman-generator'),
 	yosay = require('yosay'),
-	rest = require('restler'),
-	mkdirp = require('mkdirp'),
 	util = require('util'),
 	path = require('path'),
-	jsonfile = require('jsonfile'),
-	_ = require('underscore.string'),
-	SnClient = require("../helpers/snclient.js");
+	_ = require('underscore.string');
+
 
 var Generator = module.exports = function Generator(args, options){
 	yeoman.generators.Base.apply(this, arguments);
