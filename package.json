@@ -1,8 +1,8 @@
 {
-  "name": "generator-sn-localdev",
-  "version": "0.1.1",
+  "name": "generator-servicenow",
+  "version": "0.2.2",
   "description": "Yeoman scaffold for building AngularJS apps on the ServiceNow platform",
-  "homepage": "http://stegel.github.io/generator-snow",
+  "homepage": "http://stegel.github.io/generator-servicenow",
   "author": {
     "name": "AJ Siegel",
     "email": "aj.siegel@servicenow.com",
@@ -11,14 +11,19 @@
   "files": [
     "generators"
   ],
-  "main": "generators/index.js",
+  "main": "app/index.js",
   "keywords": [
-    "yeoman-generator"
+    "yeoman-generator",
+    "servicenow"
   ],
   "dependencies": {
-    "yeoman-generator": "^0.21.1",
     "chalk": "^1.0.0",
-    "yosay": "^1.0.2"
+    "yosay": "^1.0.2",
+    "jsonfile": "^2.2.3",
+    "lodash": "^4.5.1",
+    "mkdirp": "^0.5.1",
+    "restler": "^3.4.0",
+    "underscore.string": "^3.3.4"
   },
   "devDependencies": {
     "eslint-config-xo-space": "^0.7.0",
@@ -44,7 +49,7 @@
       "mocha": true
     }
   },
-  "repository": "stegel/generator-snow",
+  "repository": "stegel/generator-servicenow",
   "scripts": {
     "prepublish": "gulp prepublish",
     "test": "gulp"

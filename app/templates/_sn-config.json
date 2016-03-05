@@ -3,6 +3,7 @@
     "protocol":"https",
     "auth":"<%= auth %>",
     "project_prefix":"<%= prefix %>",
+	"dest" : "<%= dest %>",
     "folders":{
         "stylesheets":{
             "table":"content_css",
