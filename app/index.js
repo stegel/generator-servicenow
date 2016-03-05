@@ -19,10 +19,6 @@ var Generator = module.exports = function Generator(args, options){
 
 	this.appname = _.camelize(_.slugify(_.humanize(this.appname)));
 
-	this.on('end', function () {
-		this.npmInstall();
-	}.bind(this));
-
 	this.pkg = require("../package.json");
 //	this.sourceRoot(path.join(__dirname, '../templates/common'));
 };
@@ -128,6 +124,20 @@ Generator.prototype.setupGrunt = function setupGrunt(){
 		dest : this.appDest,
 		appPrefix : this.appPrefix
 	});
+};
+
+Generator.prototype.installers = function installers(){
+
+	 this.installDependencies({
+      skipInstall: this.options['skip-install'],
+      skipMessage: this.options['skip-message'],
+		 bower : false,
+      callback: function(){this.spawnCommand("grunt",["init"]);}.bind(this)
+    });
+};
+
+Generator.prototype.gruntInit = function gruntInit(){
+
 };
 
 Generator.prototype.setupGitIgnore = function setupGitIgnore(){
