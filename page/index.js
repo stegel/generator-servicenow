@@ -1,0 +1,41 @@
+'use strict';
+
+var yeoman = require('yeoman-generator'),
+	yosay = require('yosay'),
+	util = require('util'),
+	path = require('path'),
+	_ = require('underscore.string'),
+	require_config = require('../helpers/config-validator.js');
+
+
+var Generator = module.exports = function Generator(args, options){
+	yeoman.generators.Base.apply(this, arguments);
+
+	this.argument('filename', {type: String, required :true});
+
+
+	this.filename = _.camelize(_.slugify(_.humanize(this.filename)));
+
+	this.pkg = require("../package.json");
+//	this.sourceRoot(path.join(__dirname, '../templates/common'));
+};
+
+util.inherits(Generator, yeoman.generators.Base);
+
+Generator.prototype.welcome = function welcome(){
+	if(!this.options['skip-welcome-message']){
+		this.log(yosay("We're going ahead a creating a new page under dist/ui_pages"));
+	}
+};
+
+Generator.prototype.copying = function copying(){
+	var done = this.async();
+	var _this = this;
+	require_config().then(function(config){
+
+		_this.template("_page.xhtml","dist/ui_pages/" + config.project_prefix + _this.filename + ".xhtml");
+		done();
+	});
+
+
+}
