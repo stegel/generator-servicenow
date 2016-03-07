@@ -3,9 +3,9 @@
 
 ## Installation
 
-Install `yo`, `grunt-cli`, `bower`, and `generator-sn-localDev`
+Install `yo`, `grunt-cli`, `bower`, `grunt-servicenow` and `generator-servicenow`
 ```
-npm install -g grunt-cli bower yo generator-sn-localDev
+npm install -g grunt-cli bower yo grunt-servicenow generator-servicenow
 ```
 
 If you are planning on using Sass, you will need to first install Ruby and Compass:
