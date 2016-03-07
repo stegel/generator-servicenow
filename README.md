@@ -20,9 +20,9 @@ Make a new directory, and `cd` into it:
 mkdir my-new-project && cd $_
 ```
 
-Run `yo snow`, optionally passing an app name:
+Run `yo servicenow`, optionally passing an app name:
 ```
-yo snow
+yo servicenow
 ```
 You will be prompted for the following information
 1. Instance Name - this is the subdomain before .service-now.com
@@ -35,11 +35,11 @@ You will be prompted for the following information
 
 Available generators:
 
-* [snow](#app) (aka [snow:app](#app))
-* [snow:page](#page)
-* [snow:script](#script)
-* [snow:style](#style)
-* [snow:sass](#sass)
+* [servicenow](#app) (aka [servicenow:app](#app))
+* [servicenow:page](#page)
+* [servicenow:script](#script)
+* [servicenow:style](#style)
+* [servicenow:sass](#sass)
 
 
 You will be prompted for the following information
@@ -55,14 +55,14 @@ Sets up a new local development environment and pulls down all files with your *
 
 Example:
 ```bash
-yo snow
+yo servicenow
 ```
 ### page
 <a id="page"></a>
 Generates a new HTML page with the contents of a ui_page HTML field record. If the ui_page does not exist, it will create that page.
 Example:
 ```bash
-yo snow:page *pageName*
+yo servicenow:page *pageName*
 ```
 
 ### script
@@ -70,7 +70,7 @@ yo snow:page *pageName*
 Generates a new JS file with the contents of a ui_scripts script field record. If the ui_script does not exist, it will create that script.
 Example:
 ```bash
-yo snow:script *scriptName*
+yo servicenow:script *scriptName*
 ```
 
 ### style
@@ -78,7 +78,7 @@ yo snow:script *scriptName*
 Generates a new CSS file with the contents of a content_css style field record. If the content_css record does not exist, it will create that record.
 Example:
 ```bash
-yo snow:style *styleName*
+yo servicenow:style *styleName*
 ```
 
 ### SASS
@@ -86,7 +86,7 @@ yo snow:style *styleName*
 Generates a new SASS file with the contents of a u_sass style field record. If the u_sass record does not exist, it will create that record.
 Example:
 ```bash
-yo snow:sass *sassName*
+yo servicenow:sass *sassName*
 ```
 
 ## License
