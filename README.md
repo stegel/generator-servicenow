@@ -3,7 +3,7 @@
 
 ## Installation
 
-Install `yo`, `grunt-cli`, `bower`, `grunt-servicenow` and `generator-servicenow`
+Install `yo`, `grunt-cli`, `bower`, and `generator-servicenow`
 ```
 npm install -g grunt-cli bower yo grunt-servicenow generator-servicenow
 ```
