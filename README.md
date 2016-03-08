@@ -1,18 +1,17 @@
 # generator-servicenow [![NPM version][npm-image]][npm-url]
 > Yeoman scaffold for building AngularJS apps on the ServiceNow platform
 
+## Contents
+* [Installation](#install)
+* [Grunt](#grunt)
+* [Generators](#generators)
+* [Previewing Locally](#localPreview)
+
 ## Installation
-
-Install `yo`, `grunt-cli`, `bower`, and `generator-servicenow`
+<a name="install"></a>
+Install `yo`, `grunt-cli`, and `generator-servicenow`
 ```
-npm install -g grunt-cli bower yo grunt-servicenow generator-servicenow
-```
-
-If you are planning on using Sass, you will need to first install Ruby and Compass:
-- Install Ruby by downloading from [here](http://rubyinstaller.org/downloads/) or use Homebrew
-- Install the compass gem:
-```
-gem install compass
+npm install -g grunt-cli yo generator-servicenow
 ```
 
 Make a new directory, and `cd` into it:
@@ -22,31 +21,32 @@ mkdir my-new-project && cd $_
 
 Run `yo servicenow`, optionally passing an app name:
 ```
-yo servicenow
+yo servicenow __appname__
 ```
-You will be prompted for the following information
-1. Instance Name - this is the subdomain before .service-now.com
-2. Username - the username you use to log in to the instance
-3. Password - the password you use to log in to the instance
-4. App Prefix - the app name you prefix all related records with in **ui_pages**, **ui_scripts**, and **content_css**. This will be used to grab these records and create local versions of their content.
 
+This will copy over the following files
+* package.json - contains the required NPM packages to build on ServiceNow
+* Gruntfile.js - contains tasks for pulling/pushing records betweeen your local machine and an instance
+* __appname__app.js - a JavaScript seed for a suggested approach for Angular app bootstrapping
+* __appname__index.html - a HTML seed for viewing your project on your local machine. See [Previewing Locally](#localPreview) for more info on this approach
+* .gitignore - a seed .gitignore for ignoring node_modules, and local config file
+
+## GRUNT
+<a name="grunt"></a>
+The generator installs a [Grunt](gruntjs.com) plugin that we developed called [grunt-servicenow](http://npmjs.org/grunt-servicenow). The plugin will allow you to pull records from an instance, make changes, and push up those changes to the instance when you are ready.
+
+It is inspired by [sn-filesync](https://github.com/dynamicdan/sn-filesync) and [Sublime Text Plugin for ServiceNow](http://www.john-james-andersen.com/blog/service-now/updated-sublime-text-editor-for-servicenow.html)
+
+The last generator step will run `grunt init` which is a Guided Setup to configure instance information (host, login credentials). Please make sure to complete this step to work with your instance.
 
 ## Generators
-
+<a name="generators"></a>
 Available generators:
 
 * [servicenow](#app) (aka [servicenow:app](#app))
 * [servicenow:page](#page)
 * [servicenow:script](#script)
-* [servicenow:style](#style)
-* [servicenow:sass](#sass)
-
-
-You will be prompted for the following information
-1. Instance Name - this is the subdomain before .service-now.com
-2. Username - the username you use to log in to the instance
-3. Password - the password you use to log in to the instance
-4. App Prefix - the app name you prefix all related records with in **ui_pages**, **ui_scripts**, and **content_css**. This will be used to grab these records and create local versions of their content.
+* [servicenow:scss](#scss)
 
 ### App 
 <a id="app"></a>
@@ -59,35 +59,49 @@ yo servicenow
 ```
 ### page
 <a id="page"></a>
-Generates a new HTML page with the contents of a ui_page HTML field record. If the ui_page does not exist, it will create that page.
+Generates a new blank HTML page with the ServiceNow `j:jelly` wrapper. The filename will be prefixed with the app prefix you specified.
+
 Example:
 ```bash
-yo servicenow:page *pageName*
+yo servicenow:page page
+
+# Outputs appprefix__page.xhtml
 ```
 
 ### script
 <a id="script"></a>
-Generates a new JS file with the contents of a ui_scripts script field record. If the ui_script does not exist, it will create that script.
-Example:
-```bash
-yo servicenow:script *scriptName*
-```
+Generates a blank JS file with the filename prefixed with the app prefix you specified.
 
-### style
-<a id="style"></a>
-Generates a new CSS file with the contents of a content_css style field record. If the content_css record does not exist, it will create that record.
 Example:
 ```bash
-yo servicenow:style *styleName*
+yo servicenow:script sample
+
+# Outputs appprefix__sample.js
 ```
 
 ### SASS
 <a id="sass"></a>
-Generates a new SASS file with the contents of a u_sass style field record. If the u_sass record does not exist, it will create that record.
+Generates a blank SCSS file with the filename prefixed with the app prefix you specified.
 Example:
 ```bash
-yo servicenow:sass *sassName*
+yo servicenow:sass main
+
+# Outputs appprefix__sample.scss
 ```
+
+## Previewing Locally 
+<a id="localPreview"></a>
+In working on this, we spent some time thinking about how to view pages locally without having to constantly push changes to the instance. This is great when you are really focused on UI Design and leveraging REST calls for most of your interactions with the data. That way you don't have to worry about supporting Glide on your local machine.
+
+To do this, we need address a few differences between a traditional web server and ServiceNow.
+
+1) UI Pages have an extension of `.do`, so to reference them on the server we need `.do` but locally we want `.xhtml`.
+
+We use [grunt-text-replace](https://github.com/yoniholmes/grunt-text-replace) to replace `.do` with `.xhtml` in all JS files and copy them to a separate folder `local`. Our local `index.html` references these JS files rather than the ones meant for the instance
+
+2) Our approach to Angular's app bootstrap leverages [John Andersen's](http://www.john-james-andersen.com/blog/service-now) method for including the most recent versions of [JS](http://www.john-james-andersen.com/blog/service-now/linking-several-javascript-libraries-servicenow-ui-pages.html) and [CSS](http://www.john-james-andersen.com/blog/service-now/referencing-multiple-styles-servicenow-ui-pages.html) files. Since we aren't running Glide locally, we need a standard Angular shell page to load all the JavaScript and CSS.
+
+We build a separate HTML file that is stored in our app's directory that you will load locally to preview the site.
 
 ## License
 
