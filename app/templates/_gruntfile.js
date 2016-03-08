@@ -8,7 +8,7 @@ module.exports = function(grunt){
 		appPrefix : "<%= appPrefix %>",
 		watch : {
 			files : ["dist/ui_scripts/*.js","dist/ui_pages/__*.xhtml","dist/stylesheets/*.css"],
-			tasks : ["push:<%%= folder %>:<%%= watch_file_name %>']
+			tasks : ["push:<%%= folder %>:<%%= watch_file_name %>"]
 		}
 	});
 
