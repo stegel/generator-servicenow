@@ -1,37 +1,37 @@
 {
-  "name": "generator-servicenow",
-  "version": "0.4.1",
-  "description": "Yeoman scaffold for building AngularJS apps on the ServiceNow platform",
-  "homepage": "http://stegel.github.io/generator-servicenow",
-  "author": {
-    "name": "AJ Siegel",
-    "email": "aj.siegel@servicenow.com",
-    "url": ""
-  },
-  "files": [
-    "app"
-  ],
-  "main": "app/index.js",
-  "keywords": [
-    "yeoman-generator",
-    "servicenow"
-  ],
-  "dependencies": {
-    "chalk": "^1.0.0",
-    "yosay": "^1.0.2",
-    "underscore.string": "^3.3.4"
-  },
-  "devDependencies": {
-    "underscore.string": "^3.3.4",
-    "yeoman-assert": "^2.0.0",
-    "yeoman-test": "^1.1.0"
-  },
-  "eslintConfig": {
-    "extends": "xo-space",
-    "env": {
-      "mocha": true
-    }
-  },
-  "repository": "stegel/generator-servicenow",
-  "license": "MIT"
+	"name": "generator-servicenow",
+	"version": "0.4.1",
+	"description": "Yeoman scaffold for building AngularJS apps on the ServiceNow platform",
+	"homepage": "http://stegel.github.io/generator-servicenow",
+	"author": {
+		"name": "AJ Siegel",
+		"email": "aj.siegel@servicenow.com",
+		"url": ""
+	},
+	"files": [
+		"app",
+		"page",
+		"script",
+		"scss"
+	],
+	"main": "app/index.js",
+	"keywords": [
+		"yeoman-generator",
+		"servicenow"
+	],
+	"dependencies": {
+		"yosay": "^1.0.2",
+		"underscore.string": "^3.3.4",
+		"yeoman-generator": "^0.16.0",
+	},
+	"devDependencies": {
+		"underscore.string": "^3.3.4",
+		"yeoman-assert": "^2.0.0",
+		"yeoman-test": "^1.1.0"
+	},
+	"engines": {
+		"node": ">=0.10.0"
+	},
+	"repository": "stegel/generator-servicenow",
+	"license": "MIT"
 }
