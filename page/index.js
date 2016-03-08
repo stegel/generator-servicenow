@@ -1,6 +1,6 @@
 'use strict';
 
-var yeoman = require('yeoman-generator'),
+var yeoman = require('yeoman-generator').Base,
 	yosay = require('yosay'),
 	util = require('util'),
 	path = require('path'),
@@ -9,7 +9,7 @@ var yeoman = require('yeoman-generator'),
 
 
 var Generator = module.exports = function Generator(args, options){
-	yeoman.generators.Base.apply(this, arguments);
+	yeoman.apply(this, arguments);
 
 	this.argument('filename', {type: String, required :true});
 
@@ -20,7 +20,7 @@ var Generator = module.exports = function Generator(args, options){
 //	this.sourceRoot(path.join(__dirname, '../templates/common'));
 };
 
-util.inherits(Generator, yeoman.generators.Base);
+util.inherits(Generator, yeoman);
 
 Generator.prototype.welcome = function welcome(){
 	if(!this.options['skip-welcome-message']){
