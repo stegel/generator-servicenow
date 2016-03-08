@@ -66,6 +66,10 @@ Generator.prototype.setupGrunt = function setupGrunt(){
 	});
 };
 
+Generator.prototype.setupGitIgnore = function setupGitIgnore(){
+	this.copy("_gitignore", ".gitignore");
+};
+
 Generator.prototype.installers = function installers(){
 
 	 this.installDependencies({
@@ -78,10 +82,4 @@ Generator.prototype.installers = function installers(){
     });
 };
 
-Generator.prototype.gruntInit = function gruntInit(){
 
-};
-
-Generator.prototype.setupGitIgnore = function setupGitIgnore(){
-	this.copy("_gitignore", ".gitignore");
-};
