@@ -24,7 +24,7 @@ util.inherits(Generator, yeoman.generators.Base);
 
 Generator.prototype.welcome = function welcome(){
 	if(!this.options['skip-welcome-message']){
-		this.log(yosay("We're going ahead a creating a new page under dist/ui_pages"));
+		this.log(yosay("We're going ahead a creating a new scss under scss"));
 	}
 };
 
@@ -33,7 +33,7 @@ Generator.prototype.copying = function copying(){
 	var _this = this;
 	require_config().then(function(config){
 
-		_this.template("_page.xhtml","dist/ui_pages/" + config.project_prefix + _this.filename + ".xhtml");
+		_this.template("_style.scss","scss/" + config.project_prefix + _this.filename + ".scss");
 		done();
 	});
 
