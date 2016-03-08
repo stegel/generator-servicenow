@@ -22,7 +22,7 @@
 	"dependencies": {
 		"yosay": "^1.0.2",
 		"underscore.string": "^3.3.4",
-		"yeoman-generator": "^0.16.0",
+		"yeoman-generator": "^0.16.0"
 	},
 	"devDependencies": {
 		"underscore.string": "^3.3.4",
