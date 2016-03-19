@@ -48,15 +48,6 @@ Generator.prototype.setupJS = function setupJS(){
 	this.template("_config.js", "dist/ui_scripts/" + this.appname + "__config.js",{
 		appname : this.appname
 	});
-
-	// Local versions
-	this.template("_app.js", "dist/ui_scripts/local/" + this.appname + "__app.js",{
-		appname : this.appname
-	});
-
-	this.template("_config.js", "dist/ui_scripts/local/" + this.appname + "__config.js",{
-		appname : this.appname
-	});
 }
 
 Generator.prototype.setupGrunt = function setupGrunt(){
