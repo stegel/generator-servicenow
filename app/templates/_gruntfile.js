@@ -12,12 +12,6 @@ module.exports = function(grunt){
 		}
 	});
 
-	grunt.event.on('watch', function(action, filepath) {
-
-		grunt.config("folder",path.relative(path.join(process.cwd(),"dist"),path.dirname(filepath)));
-		grunt.config("watch_file_name",path.basename(filepath,path.extname(filepath)).replace(grunt.config("appPrefix"),""));
-	});
-
 	grunt.loadNpmTasks("grunt-servicenow");
 	grunt.loadNpmTasks("grunt-contrib-watch")
 };
